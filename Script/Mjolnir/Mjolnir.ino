@@ -20,6 +20,7 @@ void sendHtml() {
         <title>Mjonir</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="1">
         <style>
           html { font-family: sans-serif; text-align: center;}
           body { display: inline-flex; flex-direction: column; }
