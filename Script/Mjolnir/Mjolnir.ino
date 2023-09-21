@@ -3,10 +3,9 @@
 #include <WebServer.h>
 #include <uri/UriBraces.h>
 
-#define WIFI_SSID "Victor's Galaxy S20 FE"
-#define WIFI_PASSWORD "gcfe2156"
+#define WIFI_SSID "a"
+#define WIFI_PASSWORD "12345678"
 // Defining the WiFi channel speeds up the connection:
-#define WIFI_CHANNEL 6
 
 WebServer server(80);
 
@@ -53,25 +52,23 @@ void setup(void) {
   Serial.begin(115200);
   pinMode(LED1, OUTPUT);
 
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD, WIFI_CHANNEL);
+  WiFi.softAP(WIFI_SSID, WIFI_PASSWORD, 1, false, 1);
   Serial.print("Connecting to WiFi ");
   Serial.print(WIFI_SSID);
   // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.softAPgetStationNum() == 0) {
     delay(100);
     Serial.print(".");
   }
   Serial.println(" Connected!");
 
   Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+  Serial.println(WiFi.softAPIP());
 
   server.on("/", sendHtml);
 
   server.on(UriBraces("/toggle/{}"), []() {
     String led = server.pathArg(0);
-    //Serial.print("Toggle LED #");
-    //Serial.println(led);
 
     switch (led.toInt()) {
       case 1:
