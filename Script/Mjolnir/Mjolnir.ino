@@ -5,11 +5,11 @@
 
 #define WIFI_SSID "a"
 #define WIFI_PASSWORD "12345678"
-// Defining the WiFi channel speeds up the connection:
 
 WebServer server(80);
 
 const int LED1 = 2;
+const int mosfet = 13;
 
 bool led1State = false;
 
@@ -20,7 +20,6 @@ void sendHtml() {
         <title>Mjonir</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
-        <meta http-equiv="refresh" content="1">
         <style>
           html { font-family: sans-serif; text-align: center;}
           body { display: inline-flex; flex-direction: column; }
@@ -52,6 +51,7 @@ void sendHtml() {
 void setup(void) {
   Serial.begin(115200);
   pinMode(LED1, OUTPUT);
+  pinMode(mosfet, OUTPUT);
 
   WiFi.softAP(WIFI_SSID, WIFI_PASSWORD, 1, false, 1);
   Serial.print("Connecting to WiFi ");
@@ -76,7 +76,6 @@ void setup(void) {
         led1State = !led1State;
         digitalWrite(LED1, led1State);
         break;
-    }
 
     sendHtml();
   });
