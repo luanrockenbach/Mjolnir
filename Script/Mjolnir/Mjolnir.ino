@@ -75,10 +75,12 @@ void setup(void) {
       case 1:
         led1State = !led1State;
         digitalWrite(LED1, led1State);
+        digitalWrite(mosfet, !digitalRead(mosfet));
         break;
+    }
 
     sendHtml();
-  });
+    });
 
   server.begin();
   Serial.println("HTTP server started");
