@@ -93,7 +93,7 @@ void sendHtml() {
   int a=0,b;
   b=medidas_forca_indice;
   char buffer[11];
-  itoa(LARGURA_QUADRO,buffer,10); 
+  /*itoa(LARGURA_QUADRO,buffer,10); 
   //response.replace("WWWWWWWWWW", buffer);
   Serial.println("Criando página WEB - 3");
   Serial.printf("\t\t %s\n",buffer);
@@ -104,8 +104,7 @@ void sendHtml() {
   //response.replace("HHHHHHHHHH", buffer );  
   memcpy(strstr(response, "HHHHHHHHHH"), buffer, 10);
   Serial.println("Criando página WEB - 5");
-        
-  
+     
   for(a=0;a<NUM_AMOSTRAS;a++)
   {
     char buffer[50];
@@ -116,10 +115,11 @@ void sendHtml() {
     if(b==NUM_AMOSTRAS)
       b=0;  // volta ao inicio do vetor
   }
-  strcat (response,PAGINAINICIO);
+  */
+  strcat (response,PAGINAFINAL);
   //response.replace("LED1_TEXT", led1State ? "ON " : "OFF");
-  memcpy(strstr(response, "LED1_TEXT"), led1State ? "ON " : "OFF", 9);
-  Serial.println("Criando página WEB - fim");
+  //memcpy(strstr(response, "LED1_TEXT"), led1State ? "ON " : "OFF", 9);
+  Serial.println("Criando página WEB - fim");   
   server.send(200, "text/html", response);
   Serial.print(response);
 }
@@ -151,10 +151,12 @@ void setup(void) {
       case 1:
         led1State = !led1State;
         digitalWrite(LED1, led1State);
+        digitalWrite(mosfet, !digitalRead(mosfet));
         break;
     }
+
     sendHtml();
-  });
+    });
 
   server.begin();
   Serial.println("HTTP server started");
