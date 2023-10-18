@@ -23,13 +23,20 @@ long int medidas_forca[NUM_AMOSTRAS];
 int medidas_forca_indice=0;
 
 HX711 scale;
+// Parâmetros para botar na tela o gráfico de força
+const int FATOR_REDUCAO=1000;
+const int LARGURA_QUADRO=300;
+const int ALTURA_QUADRO=100;
+const int PASSO_QUADRO=LARGURA_QUADRO/NUM_AMOSTRAS;
+const int FATOR_AJUSTE_TELA=(ALTURA_QUADRO/6); // fator para fazer log10(1.000.000)=6 caber na tela
 
 bool led1State = false;
 
 void sendHtml() {
   
   Serial.println("Criando página WEB - inicio");
-  String response = R"(
+  char response [4096];
+  const char PAGINAINICIO[] = R"(
     <!DOCTYPE html><html>
       <head>
         <title>Mjonir</title>
@@ -73,39 +80,48 @@ void sendHtml() {
         ctx.moveTo(0,0);
         // Define an end point
   )";
- 
+  const char PAGINAFINAL[] = R"(
+        ctx.stroke();  
+        </script>
+      </body>
+    </html>
+      )";
+  Serial.println("Criando página WEB - 1");
+ strcpy (response,PAGINAINICIO);
+  Serial.println("Criando página WEB - 2");
+  Serial.println("Criando página WEB - ");
   int a=0,b;
   b=medidas_forca_indice;
-  const int FATOR_REDUCAO=1000;
-  const int LARGURA_QUADRO=300;
-  const int ALTURA_QUADRO=200;
-  const int PASSO_QUADRO=LARGURA_QUADRO/NUM_AMOSTRAS;
-  char buffer[5];
+  char buffer[11];
   itoa(LARGURA_QUADRO,buffer,10); 
-  response.replace("WWWWWWWWWW", buffer);
+  //response.replace("WWWWWWWWWW", buffer);
+  Serial.println("Criando página WEB - 3");
+  Serial.printf("\t\t %s\n",buffer);
+  memcpy(strstr(response, "WWWWWWWWWW"), buffer, 10);
+  Serial.println("Criando página WEB - 4");
   itoa(ALTURA_QUADRO,buffer,10);
-  response.replace("HHHHHHHHHH", buffer );
-  Serial.println("Criando página WEB - meio");
+  Serial.printf("\t\t %s\n",buffer);
+  //response.replace("HHHHHHHHHH", buffer );  
+  memcpy(strstr(response, "HHHHHHHHHH"), buffer, 10);
+  Serial.println("Criando página WEB - 5");
         
   
   for(a=0;a<NUM_AMOSTRAS;a++)
   {
     char buffer[50];
-    sprintf(buffer, "ctx.lineTo(%d,%d);\n", (PASSO_QUADRO*a), ALTURA_QUADRO-medidas_forca[b]/FATOR_REDUCAO);
-    response.concat(buffer);
+    sprintf(buffer, "ctx.lineTo(%d,%d);\n", (PASSO_QUADRO*a), ALTURA_QUADRO-medidas_forca[b]); // geração do gráfico é apontando para baixo (sentido do eixo Y para baixo)
+    //response.concat(buffer);
+    strcat (response,buffer);
     b++;
     if(b==NUM_AMOSTRAS)
       b=0;  // volta ao inicio do vetor
   }
-  response.concat( "\
-        ctx.stroke();  \
-        </script>  \
-      </body> \
-    </html> ");
-  response.replace("LED1_TEXT", led1State ? "ON" : "OFF");
+  strcat (response,PAGINAINICIO);
+  //response.replace("LED1_TEXT", led1State ? "ON " : "OFF");
+  memcpy(strstr(response, "LED1_TEXT"), led1State ? "ON " : "OFF", 9);
   Serial.println("Criando página WEB - fim");
   server.send(200, "text/html", response);
-  //Serial.print(response);
+  Serial.print(response);
 }
 
 void setup(void) {
@@ -119,7 +135,7 @@ void setup(void) {
   // Wait for connection
   while (WiFi.softAPgetStationNum() == 0) {
     delay(100);
-    Serial.print(".");
+    //Serial.print(".");
   }
   Serial.println(" Connected!");
 
@@ -162,8 +178,10 @@ void loop(void) {
   //delay(2);
   forca=scale.get_value(8);// média de x medidas de forca, já vai tomar o tempo equivalente do delay!
   // imprime para debug somente
-  Serial.printf("%-8.0f\n",(float)forca);   // print the average of X readings from the ADC
-  medidas_forca[medidas_forca_indice]=forca;
+  Serial.printf("%-8.0f    ->    ",(float)forca);   // print the average of X readings from the ADC
+  medidas_forca[medidas_forca_indice]=FATOR_AJUSTE_TELA*((float)log10((float)abs(forca)));
+  Serial.printf("%-8.0f\n",(float)medidas_forca[medidas_forca_indice]);   // print the average of X readings from the ADC
+ 
   medidas_forca_indice++;
   if(medidas_forca_indice==NUM_AMOSTRAS)
     medidas_forca_indice=0;  // volta ao inicio do vetor
