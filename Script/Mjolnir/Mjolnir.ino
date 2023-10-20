@@ -62,10 +62,15 @@ void sendHtml() {
           hr {display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto;
               border-style: inset;border-width: 1px;}
           h1 { text-align: center;} 
-          .container{text-align: center;}
-          .btn { background-color: #5B5; border: none; color: #fff; padding: 0.5em 1em;
-                 font-size: 2em; text-decoration: none; pady: 15px}
-          .btn.OFF { background-color: #111; color: #fff; }
+          .container1{text-align: center; padding-bottom: 20px}
+          .container2{text-align: center; padding-bottom: 20px}
+
+          .btn.DESLIGA { background-color: #00f; border: none; color: #fff; padding: 10px;
+                 font-size: 2em; text-decoration: none; margin: 10px}
+          .btn.LIGA { background-color: #00f; border: none; color: #fff; padding: 10px;
+                 font-size: 2em; text-decoration: none; margin: 10px}
+          .btn.BOTAOTARA { background-color: #00f; border: none; color: #fff; padding: 10px;
+                 font-size: 2em; text-decoration: none; margin: 10px}
         </style>
       </head>
             
@@ -76,8 +81,6 @@ void sendHtml() {
         <div class="container1">
           xxxxxxxbotaoLED 
         </div>
-       <p></p>
-       <p></p>
         <div class="container2">
           <a href="/tara" class="btn BOTAOTARA">TARA DA MEDIDA</a>
         </div>
@@ -146,8 +149,10 @@ void sendHtml() {
  int valor_forte = ((float)FATORFORTE*ALTURA_QUADRO);
  int valor_medio = ((float)FATORMEDIO*ALTURA_QUADRO);
   
-  response.concat((analogRead(bat)*1200.0)/(11200.0)); //LOW BAT == 11.79
-  
+  response.concat("Bateria: ");
+  response.concat(((30*analogRead(bat)*1200.0)/(11200.0))/(70.5)); //LOW BAT == 11.79)
+  response.concat(" V");
+  /*
   Serial.print("valor_forte  "); 
   Serial.println(valor_forte); 
   Serial.print("valor_medio  "); 
@@ -170,8 +175,8 @@ void sendHtml() {
   response.concat(PAGINAFINAL);
   //strcat (response,PAGINAFINAL);
   //delay(100);
-  response.replace("xxxxxxxbotaoLED", led1State ? "<a href=\"/LED0\" class=\"btn DESLIGA\">DESLIGA</a>" : "<a href=\"/LED1\" class=\"btn LIGA\">LIGA</a>");
-   
+  response.replace("xxxxxxxbotaoLED", led1State ? "<a href='/LED0\' class='btn DESLIGA'>DESLIGA</a>" : "<a href='/LED1\' class='btn LIGA'>LIGA</a>");
+
   //memcpy(strstr(response, "LED1_TEXT"), led1State ? "ON " : "OFF", 9);
   //Serial.println("Criando página WEB - 7");  
   //delay(100);
