@@ -62,15 +62,15 @@ void sendHtml() {
           hr {display: block; margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto;
               border-style: inset;border-width: 1px;}
           h1 { text-align: center;} 
-          .container1{text-align: center; padding-bottom: 20px}
-          .container2{text-align: center; padding-bottom: 20px}
+          .container1{text-align: center; padding-bottom: 25px}
+          .container2{text-align: center; padding-bottom: 25px}
 
-          .btn.DESLIGA { background-color: #00f; border: none; color: #fff; padding: 10px;
-                 font-size: 2em; text-decoration: none; margin: 10px}
+          .btn.DESLIGA { background-color: #222; border: none; color: #fff; padding: 10px;
+                 font-size: 2em; text-decoration: none; margin: 15px; border-radius: 10px}
           .btn.LIGA { background-color: #00f; border: none; color: #fff; padding: 10px;
-                 font-size: 2em; text-decoration: none; margin: 10px}
+                 font-size: 2em; text-decoration: none; margin: 15px; border-radius: 10px}
           .btn.BOTAOTARA { background-color: #00f; border: none; color: #fff; padding: 10px;
-                 font-size: 2em; text-decoration: none; margin: 10px}
+                 font-size: 2em; text-decoration: none; margin: 10px; border-radius: 10px}
         </style>
       </head>
             
@@ -85,7 +85,7 @@ void sendHtml() {
           <a href="/tara" class="btn BOTAOTARA">TARA DA MEDIDA</a>
         </div>
 
-        <h2>Quanto forte você é? Você é o escolhido? </h2>
+        <h2>Quão forte você é? Você é O ESCOLHIDO? </h2>
 
         <canvas id="myCanvas" width="WWWWWWWWWW" height="HHHHHHHHHH" style="border:1px solid grey;"></canvas>
 
