@@ -6,8 +6,13 @@
 #include "HX711.h"
 //#include "soc/rtc.h"
 
-#define WIFI_SSID "aBcD"
+#define WIFI_SSID "Thor"
 #define WIFI_PASSWORD "12345678"
+
+
+#define bat 33
+float tensaobateria=0;
+float tensaodivisor = 0;
 
 WebServer server(80);
 
@@ -59,7 +64,7 @@ void sendHtml() {
           h1 { text-align: center;} 
           .container{text-align: center;}
           .btn { background-color: #5B5; border: none; color: #fff; padding: 0.5em 1em;
-                 font-size: 2em; text-decoration: none}
+                 font-size: 2em; text-decoration: none; pady: 15px}
           .btn.OFF { background-color: #111; color: #fff; }
         </style>
       </head>
@@ -140,7 +145,9 @@ void sendHtml() {
  // exibe figura condicionada ao nível de força realizado
  int valor_forte = ((float)FATORFORTE*ALTURA_QUADRO);
  int valor_medio = ((float)FATORMEDIO*ALTURA_QUADRO);
- /*
+  
+  response.concat((analogRead(bat)*1200.0)/(11200.0)); //LOW BAT == 11.79
+  
   Serial.print("valor_forte  "); 
   Serial.println(valor_forte); 
   Serial.print("valor_medio  "); 
@@ -177,6 +184,9 @@ void sendHtml() {
 
 void setup(void) {
   Serial.begin(115200);
+
+  pinMode(bat,INPUT);
+
   pinMode(LED1, OUTPUT);
   pinMode(mosfet, OUTPUT);
 
@@ -246,10 +256,11 @@ void setup(void) {
 }
 
 void loop(void) {
+
   long int forca;
   server.handleClient();
   delay(2);
-  forca=scale.get_value(8);// média de x medidas de forca, já vai tomar o tempo equivalente do delay!
+  forca=scale.get_value(16);// média de x medidas de forca, já vai tomar o tempo equivalente do delay!
   // imprime para debug somente
   Serial.printf("%-8.0f    ->    ",(float)forca);   // print the average of X readings from the ADC
   // medida logaritmica - ruim
