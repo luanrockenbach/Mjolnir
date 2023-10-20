@@ -148,9 +148,13 @@ void sendHtml() {
  // exibe figura condicionada ao nível de força realizado
  int valor_forte = ((float)FATORFORTE*ALTURA_QUADRO);
  int valor_medio = ((float)FATORMEDIO*ALTURA_QUADRO);
+
+  tensaobateria = analogRead(bat)/4;
+  tensaodivisor = (tensaobateria*1200.0)/(11200.0); //LOW BAT == 11.79
+  float BatThor=(30*tensaodivisor)/(70.5);
   
   response.concat("Bateria: ");
-  response.concat(((30*analogRead(bat)*1200.0)/(11200.0))/(70.5)); //LOW BAT == 11.79)
+  response.concat(BatThor); //LOW BAT == 11.79)
   response.concat(" V");
   /*
   Serial.print("valor_forte  "); 
