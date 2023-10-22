@@ -16,13 +16,13 @@ float tensaodivisor = 0;
 
 WebServer server(80);
 
-const int LED1 = 2;
-const int mosfet = 13;
 
+const int LED1 = 2;
+const int mosfet = 4;
 
 // HX711 circuit wiring
-const int LOADCELL_DOUT_PIN = 18;
-const int LOADCELL_SCK_PIN = 4;
+const int LOADCELL_DOUT_PIN = 19;
+const int LOADCELL_SCK_PIN = 18;
 const int NUM_AMOSTRAS = 32;
 long int medidas_forca[NUM_AMOSTRAS];
 long int ultima_medida;
@@ -153,6 +153,7 @@ void sendHtml() {
   tensaodivisor = (tensaobateria*1200.0)/(11200.0); //LOW BAT == 11.79
   float BatThor=(30*tensaodivisor)/(70.5);
   
+  //response.concat((analogRead(bat)*1200.0)/(11200.0)); //LOW BAT == 11.79
   response.concat("Bateria: ");
   response.concat(BatThor); //LOW BAT == 11.79)
   response.concat(" V");
@@ -221,7 +222,7 @@ void setup(void) {
       case 1:
         led1State = !led1State;
         digitalWrite(LED1, led1State);
-        digitalWrite(mosfet, !digitalRead(mosfet));
+        digitalWrite(mosfet, led1State);
         break;
     }
 
@@ -269,7 +270,8 @@ void loop(void) {
   long int forca;
   server.handleClient();
   delay(2);
-  forca=scale.get_value(16);// média de x medidas de forca, já vai tomar o tempo equivalente do delay!
+  Serial.printf("%-8.0f (sem tara)   ->    ",(float)scale.read_average(4));  
+  forca=scale.get_value(4);// média de x medidas de forca, já vai tomar o tempo equivalente do delay!
   // imprime para debug somente
   Serial.printf("%-8.0f    ->    ",(float)forca);   // print the average of X readings from the ADC
   // medida logaritmica - ruim
